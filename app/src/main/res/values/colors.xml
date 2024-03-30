@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="backgroundColor">#FBFBFB</color>
+    <color name="selectedChipBackground">#F4CDD6</color>
+    <color name="selectedChipTextColor">#F97192</color>
+    <color name="titleTextColor">#222831</color>
+    <color name="buttonBorders">#FD3A69</color>
+    <color name="buttonTextColor">#FD3A69</color>
+    <color name="buttonRiple">#F97192</color>
+    <color name="textColor">#AAAAAD</color>
+    <color name="colorToolbarTitle">#222831</color>
 </resources>

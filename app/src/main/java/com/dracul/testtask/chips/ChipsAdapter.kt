@@ -1,11 +1,14 @@
 package com.dracul.testtask.chips
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.dracul.testtask.R
 import com.dracul.testtask.data.FilterChip
 import com.dracul.testtask.databinding.ItemChipBinding
 
@@ -46,6 +49,15 @@ class ChipsAdapter(private val listener: OnChipListner) : ListAdapter<FilterChip
             binding.run {
                 chip.text = item.category.strCategory
                 chip.isChecked = item.isChecked
+
+                if (chip.isChecked){
+                    chip.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.root.context,R.color.selectedChipBackground))
+                    chip.setTextColor( ColorStateList.valueOf(ContextCompat.getColor(this.root.context,R.color.selectedChipBackground)))
+                }else{
+                        chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(this.root.context,R.color.backgroundColor))
+                    chip.setTextColor(ContextCompat.getColor(this.root.context,R.color.textColor))
+
+                }
             }
         }
 

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.dracul.testtask.R
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dracul.testtask.data.Meal
 import com.dracul.testtask.databinding.ItemMealBinding
 
@@ -41,6 +41,7 @@ class MealAdapter : ListAdapter<Meal, MealAdapter.ViewHolder>(MealDiffCallback()
                     .with(binding.root)
                     .load(item.strMealThumb)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivIcon)
             }
         }
