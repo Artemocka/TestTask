@@ -3,7 +3,6 @@ package com.dracul.testtask.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dracul.testtask.data.Category
 import com.dracul.testtask.data.FilterChip
 import com.dracul.testtask.data.Meal
 import com.dracul.testtask.data.toFilterChipList
@@ -11,26 +10,21 @@ import com.dracul.testtask.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Response
-import java.lang.Exception
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class HomeViewModel(private val mainRepository: HomeRepository) : ViewModel() {
     var meals: MutableStateFlow<List<Meal>> = MutableStateFlow(listOf())
-
-    private var categories: List<Category> = listOf()
-    val filterChipList: MutableStateFlow<List<FilterChip>> = MutableStateFlow(categories.toFilterChipList())
+    val filterChipList: MutableStateFlow<List<FilterChip>> = MutableStateFlow(listOf())
+    val errorMessage = MutableStateFlow<String>("")
+    val loading = MutableStateFlow<Boolean>(false)
 
     init {
         getMeals()
         getCategories()
+
     }
 
-
-    val errorMessage = MutableStateFlow<String>("")
-    val loading = MutableStateFlow<Boolean>(false)
 
     fun setSelectedFilterChip(filterChip: FilterChip) {
         filterChipList.value = filterChipList.value.map {
@@ -83,10 +77,11 @@ class HomeViewModel(private val mainRepository: HomeRepository) : ViewModel() {
                 null
             }
             if (response?.isSuccessful == true) {
-                categories = response.body()?.categories!!
+                filterChipList.value = response.body()?.categories!!.toFilterChipList()
                 loading.value = false
             }
         }
+
     }
 
     private fun onError(message: String) {
