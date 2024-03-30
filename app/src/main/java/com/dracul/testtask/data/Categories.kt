@@ -10,3 +10,10 @@ data class Category(
 data class Categories(
     val categories:List<Category>
 )
+
+fun List<Category>.toFilterChipList():List<FilterChip>{
+
+    return this.map {
+        FilterChip(it)
+    }.toList()
+}
