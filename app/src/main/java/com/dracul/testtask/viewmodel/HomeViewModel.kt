@@ -1,5 +1,6 @@
 package com.dracul.testtask.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dracul.testtask.data.Category
@@ -11,6 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
+import java.lang.Exception
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class HomeViewModel(private val mainRepository: HomeRepository) : ViewModel() {
     var meals: MutableStateFlow<List<Meal>> = MutableStateFlow(listOf())
@@ -40,32 +45,48 @@ class HomeViewModel(private val mainRepository: HomeRepository) : ViewModel() {
 
     fun getMeals() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = mainRepository.getMeals()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    meals.value = response.body()?.meals!!
-                    loading.value = false
-                } else {
-                    onError("Error : ${response.message()} ")
-                }
+            loading.value = true
+
+            val response = try {
+                mainRepository.getMeals()
+
+            } catch (e: UnknownHostException) {
+                onError("No internet connections!")
+                null
+            } catch (e: SocketTimeoutException) {
+                onError("Bad internet connections")
+                null
+            } catch (e: Exception) {
+                onError("Unknown error")
+                null
+            }
+            if (response?.isSuccessful == true) {
+                meals.value = response.body()?.meals!!
+                loading.value = false
             }
         }
     }
 
     fun getCategories() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = mainRepository.getCategories()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    categories = response.body()?.categories!!
-                    loading.value = false
-                    filterChipList.value = categories.toFilterChipList()
-                } else {
-                    onError("Error : ${response.message()} ")
-                }
+            val response = try {
+                mainRepository.getCategories()
+
+            } catch (e: UnknownHostException) {
+                onError("No internet connections!")
+                null
+            } catch (e: SocketTimeoutException) {
+                onError("Bad internet connections")
+                null
+            } catch (e: Exception) {
+                onError("Unknown error")
+                null
+            }
+            if (response?.isSuccessful == true) {
+                categories = response.body()?.categories!!
+                loading.value = false
             }
         }
-
     }
 
     private fun onError(message: String) {
@@ -74,3 +95,6 @@ class HomeViewModel(private val mainRepository: HomeRepository) : ViewModel() {
     }
 }
 
+fun Any.poop(s: String) {
+    Log.e("testtask", "[${javaClass.simpleName}] $s")
+}

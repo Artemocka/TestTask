@@ -16,6 +16,7 @@ import com.dracul.testtask.recycler.MealAdapter
 import com.dracul.testtask.repository.HomeRepository
 import com.dracul.testtask.viewmodel.HomeViewModel
 import com.dracul.testtask.viewmodel.HomeViewModelFactory
+import com.dracul.testtask.viewmodel.poop
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ChipsAdapter.OnChipListner {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity(), ChipsAdapter.OnChipListner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        poop("on create")
         binding = ActivityMainBinding.inflate(layoutInflater)
         val retrofitService = RetrofitService.getInstance()
         val homeRepository = HomeRepository(retrofitService)
@@ -49,11 +51,14 @@ class MainActivity : AppCompatActivity(), ChipsAdapter.OnChipListner {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.errorMessage.collect {
+                binding.tvInternetProblems.text = it
+            }}
         binding.rvList.adapter = adapter
         binding.chipRv.adapter = chipsAdapter
 
 
-//        binding.collapsingLayout.offse
 
 
         enableEdgeToEdge()
@@ -68,6 +73,8 @@ class MainActivity : AppCompatActivity(), ChipsAdapter.OnChipListner {
     override fun onChipChecked(filterChip: FilterChip) {
         viewModel.setSelectedFilterChip(filterChip)
     }
+
+
 
 
 }
